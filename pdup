@@ -12,6 +12,7 @@ do
 
 	echo "Your file URL: $PDSERVER/u/$FILEID"
 	echo ""
+        echo "$PDSERVER/u/$FILEID" > url.txt
 done
 
 echo "" # Move cursor down when script finishes
