@@ -1,18 +1,25 @@
 #!/bin/bash
-MINPARAMS=1
-PDSERVER="https://pixeldrain.com"
-
+MINPARAMS=1  # Minimum number of parameters required
+# Protocol for upload
+PROTOCOL="https://"
+# Server for upload
+PDSERVER="pixeldrain.com"
+# API key for authentication
+API="39134aae-3e90-4854-9f58-d7e2b271316f"	# https://pixeldrain.com/user/api_keys
+ 
 for FILE in "$@"
 do
 	FILENAME="${FILE##*/}"
-
-	echo "Uploading $FILENAME ... "
-	RESPONSE=$(curl -# -F "name=$FILENAME" -F "file=@$FILE" $PDSERVER/api/file)
-	FILEID=$(echo $RESPONSE | grep -Po '(?<="id":")[^"]*')
-
-	echo "Your file URL: $PDSERVER/u/$FILEID"
+ 
+	echo -e "\e[1mUploading\e[0m $FILENAME  \e[5m...\e[0m\e[1;34m"
+	RESPONSE=$(curl -# -T "$FILE" -u :$API $PROTOCOL$PDSERVER/api/file/)  # Upload file using cURL
+	FILEID=$(echo $RESPONSE | grep -Po '(?<="id":")[^"]*')  # Extract file ID from response
+ 
+	# Display uploaded file information
+	echo -e "\e[0m\e[1mUploaded\e[0m file: \e[7m$PDSERVER/u/$FILEID\e[0m"
 	echo ""
-        echo "$PDSERVER/u/$FILEID" > url.txt
+ 
+	# Append URL and filename to a text file
+	echo "$PROTOCOL$PDSERVER/u/$FILEID	$FILENAME" >> ~/asdurl.txt
 done
-
-echo "" # Move cursor down when script finishes
+echo "" # Add an empty line to move cursor down when script finishes
